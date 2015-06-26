@@ -280,11 +280,13 @@ namespace QuantConnect
         /// </summary>
         /// <param name="filename">Location of the original zip file</param>
         /// <param name="zip">The ZipFile instance to be returned to the caller</param>
+        /// <param name="dataFormat">The data format of the zip content</param>
         /// <returns>Stream reader of the first file contents in the zip file</returns>
-        public static StreamReader Unzip(string filename, out Ionic.Zip.ZipFile zip)
+        public static Stream Unzip(string filename, out Ionic.Zip.ZipFile zip, out DataStreamFormat dataFormat)
         {
-            StreamReader reader = null;
+            Stream stream = null;
             zip = null;
+            dataFormat = DataStreamFormat.Csv;
 
             try
             {
@@ -294,13 +296,17 @@ namespace QuantConnect
                     {
                         zip = new Ionic.Zip.ZipFile(filename);
 
-                        reader = new StreamReader(zip[0].OpenReader());
+                        var entry = zip[0];
+                        if (entry.FileName.GetExtension() == ".qcb")
+                            dataFormat = DataStreamFormat.Qcb;
+
+                        stream = entry.OpenReader();
                     }
                     catch (Exception err)
                     {
                         Log.Error("QC.Data.Unzip(1): " + err.Message);
                         if (zip != null) zip.Dispose();
-                        if (reader != null) reader.Close();
+                        if (stream != null) stream.Close();
                     }
                 }
                 else
@@ -312,7 +318,7 @@ namespace QuantConnect
             {
                 Log.Error("Data.UnZip(3): " + filename + " >> " + err.Message);
             }
-            return reader;
+            return stream;
         } // End UnZip
 
         /// <summary>

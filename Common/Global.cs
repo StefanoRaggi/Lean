@@ -399,6 +399,22 @@ namespace QuantConnect
     }
 
     /// <summary>
+    /// Specifies the stream's data format
+    /// </summary>
+    public enum DataStreamFormat
+    {
+        /// <summary>
+        /// The data is in CSV text format
+        /// </summary>
+        Csv,
+
+        /// <summary>
+        /// The data is in QCB binary format
+        /// </summary>
+        Qcb
+    }
+
+    /// <summary>
     /// enum Period - Enum of all the analysis periods, AS integers. Reference "Period" Array to access the values
     /// </summary>
     public enum Period

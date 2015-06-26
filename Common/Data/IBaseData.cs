@@ -40,7 +40,6 @@ namespace QuantConnect.Data
             set;
         }
         
-        
         /// <summary>
         /// Symbol for underlying Security
         /// </summary>
@@ -49,7 +48,6 @@ namespace QuantConnect.Data
             get;
             set;
         }
-
 
         /// <summary>
         /// All timeseries data is a time-value pair:
@@ -60,7 +58,6 @@ namespace QuantConnect.Data
             set;
         }
 
-
         /// <summary>
         /// Alias of Value.
         /// </summary>
@@ -70,13 +67,12 @@ namespace QuantConnect.Data
         }
 
         /// <summary>
-        /// Reader Method :: using set of arguements we specify read out type. Enumerate
+        /// Reader Method :: using set of arguments we specify read out type. Enumerate
         /// until the end of the data stream or file. E.g. Read CSV file line by line and convert
         /// into data types.
         /// </summary>
         /// <returns>BaseData type set by Subscription Method.</returns>
         BaseData Reader(SubscriptionDataConfig config, string line, DateTime date, DataFeedEndpoint datafeed);
-
 
         /// <summary>
         /// Return the URL string source of the file. This will be converted to a stream 

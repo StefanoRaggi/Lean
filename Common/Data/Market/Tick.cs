@@ -16,6 +16,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using QuantConnect.Data.Binary;
 using QuantConnect.Logging;
 
 namespace QuantConnect.Data.Market
@@ -100,7 +101,7 @@ namespace QuantConnect.Data.Market
         }
 
         /// <summary>
-        /// Cloner constructor for fill formward engine implementation. Clone the original tick into this new tick:
+        /// Cloner constructor for fill forward engine implementation. Clone the original tick into this new tick:
         /// </summary>
         /// <param name="original">Original tick we're cloning</param>
         public Tick(Tick original) 
@@ -259,6 +260,34 @@ namespace QuantConnect.Data.Market
         }
 
         /// <summary>
+        /// Tick implementation of reader method: read a line of data from the source and convert it to a tick object.
+        /// </summary>
+        /// <param name="config">Subscription configuration object for algorithm</param>
+        /// <param name="streamReader">Stream reader used to read the data</param>
+        /// <param name="date">Date of this reader request</param>
+        /// <param name="isLiveMode">true if we're in live mode, false for backtesting mode</param>
+        /// <returns>New Initialized tick</returns>
+        public override BaseData Reader(SubscriptionDataConfig config, DataStreamReader streamReader, DateTime date, bool isLiveMode)
+        {
+            if (isLiveMode)
+            {
+                // currently ticks don't come through the reader function
+                return new Tick();
+            }
+
+            switch (streamReader.DataFormat)
+            {
+                case DataStreamFormat.Qcb:
+                    var tick = streamReader.BinaryReader.ReadTick();
+                    return new Tick(tick.Timestamp, config.Symbol, tick.BidPrice, tick.AskPrice);
+
+                default:
+                    string line = streamReader.TextReader.ReadLine();
+                    return new Tick(config, line, date);
+            }
+        }
+
+        /// <summary>
         /// Get source for tick data feed - not used with QuantConnect data sources implementation.
         /// </summary>
         /// <param name="config">Configuration object</param>
@@ -275,21 +304,22 @@ namespace QuantConnect.Data.Market
                 return new SubscriptionDataSource(string.Empty, SubscriptionTransportMedium.LocalFile);
             }
 
-            var dateFormat = "yyyyMMdd";
+            const string dateFormat = "yyyyMMdd";
             if (config.SecurityType == SecurityType.Forex)
             {
                 dataType = TickType.Quote;
             }
 
-            string source;
             var symbol = string.IsNullOrEmpty(config.MappedSymbol) ? config.Symbol : config.MappedSymbol;
             var securityType = config.SecurityType.ToString().ToLower();
             var market = config.Market.ToLower();
             var resolution = config.Resolution.ToString().ToLower();
             var file = date.ToString(dateFormat) + "_" + dataType.ToString().ToLower() + ".zip";
+            // commented line here for performance testing
+            //var file = date.ToString(dateFormat) + "_Tick.qcb";
 
             //Add in the market for equities/cfd/forex for internationalization support.
-            source = Path.Combine(Constants.DataFolder, securityType, market, resolution, symbol.ToLower(), file);
+            var source = Path.Combine(Constants.DataFolder, securityType, market, resolution, symbol.ToLower(), file);
 
             return new SubscriptionDataSource(source, SubscriptionTransportMedium.LocalFile);
         }

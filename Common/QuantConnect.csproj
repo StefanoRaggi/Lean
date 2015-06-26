@@ -117,11 +117,16 @@
     <Compile Include="Brokerages\InteractiveBrokersBrokerageModel.cs" />
     <Compile Include="Brokerages\TradierBrokerageModel.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Data\Binary\QcbConstants.cs" />
+    <Compile Include="Data\Binary\QcbFile.cs" />
+    <Compile Include="Data\Binary\QcbFileHeader.cs" />
+    <Compile Include="Data\Binary\QcbTick.cs" />
     <Compile Include="Data\Consolidators\BaseDataConsolidator.cs" />
     <Compile Include="Data\Consolidators\DynamicDataConsolidator.cs" />
     <Compile Include="Data\Consolidators\RenkoConsolidator.cs" />
     <Compile Include="Data\Consolidators\TickConsolidator.cs" />
     <Compile Include="Data\Consolidators\TradeBarConsolidatorBase.cs" />
+    <Compile Include="Data\DataStreamReader.cs" />
     <Compile Include="Data\Market\DataDictionary.cs" />
     <Compile Include="Data\Market\Dividend.cs" />
     <Compile Include="Data\Market\Dividends.cs" />

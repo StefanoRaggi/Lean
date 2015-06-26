@@ -187,6 +187,25 @@ namespace QuantConnect.Data.Market
         }
 
         /// <summary>
+        /// TradeBar implementation of reader method: read a line of data from the source and convert it to a TradeBar object.
+        /// </summary>
+        /// <param name="config">Subscription configuration object for algorithm</param>
+        /// <param name="streamReader">Stream reader used to read the data</param>
+        /// <param name="date">Date of this reader request</param>
+        /// <param name="isLiveMode">true if we're in live mode, false for backtesting mode</param>
+        /// <returns>New Initialized TradeBar</returns>
+        public override BaseData Reader(SubscriptionDataConfig config, DataStreamReader streamReader, DateTime date, bool isLiveMode)
+        {
+            if (streamReader.DataFormat != DataStreamFormat.Csv)
+            {
+                throw new NotImplementedException("Binary format for TradeBar is not yet implemented.");
+            }
+
+            var line = streamReader.TextReader.ReadLine();
+            return Reader(config, line, date, isLiveMode);
+        }
+
+        /// <summary>
         /// Parses the trade bar data line assuming QC data formats
         /// </summary>
         public static TradeBar Parse(SubscriptionDataConfig config, string line, DateTime baseDate)

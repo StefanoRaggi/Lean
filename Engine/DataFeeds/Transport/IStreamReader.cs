@@ -14,6 +14,8 @@
  *
 */
 
+using QuantConnect.Data;
+
 namespace QuantConnect.Lean.Engine.DataFeeds.Transport
 {
     /// <summary>
@@ -22,7 +24,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
     public interface IStreamReader
     {
         /// <summary>
-        /// Gets the transport medium of this stream reader
+        /// Gets the transport medium of this stream
         /// </summary>
         SubscriptionTransportMedium TransportMedium { get; }
 
@@ -30,11 +32,11 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// Gets whether or not there's more data to be read in the stream
         /// </summary>
         bool EndOfStream { get; }
-        
+
         /// <summary>
-        /// Gets the next line/batch of content from the stream 
+        /// Gets the data stream reader used
         /// </summary>
-        string ReadLine();
+        DataStreamReader GetDataStreamReader();
 
         /// <summary>
         /// Closes the stream

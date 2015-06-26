@@ -14,8 +14,7 @@
  *
 */
 
-using System;
-using QuantConnect.Logging;
+using QuantConnect.Data;
 using RestSharp;
 
 namespace QuantConnect.Lean.Engine.DataFeeds.Transport
@@ -27,6 +26,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
     {
         private readonly RestClient _client;
         private readonly RestRequest _request;
+        private readonly DataStreamReader _reader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestSubscriptionStreamReader"/> class.
@@ -36,6 +36,12 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         {
             _client = new RestClient(source);
             _request = new RestRequest(Method.GET);
+
+            var response = _client.Execute(_request);
+            if (response != null)
+            {
+                _reader = new DataStreamReader(response.Content.ToStream(), DataStreamFormat.Csv);
+            }
         }
 
         /// <summary>
@@ -51,28 +57,15 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// </summary>
         public bool EndOfStream
         {
-            get { return false; }
+            get { return _reader == null || _reader.EndOfStream; }
         }
 
         /// <summary>
-        /// Gets the next line/batch of content from the stream 
+        /// Gets the data stream reader used
         /// </summary>
-        public string ReadLine()
+        public DataStreamReader GetDataStreamReader()
         {
-            try
-            {
-                var response = _client.Execute(_request);
-                if (response != null)
-                {
-                    return response.Content;
-                }
-            }
-            catch (Exception err)
-            {
-                Log.Error("RestSubscriptionStreamReader.ReadLine(): " + err.Message);
-            }
-
-            return string.Empty;
+            return _reader;
         }
 
         /// <summary>
@@ -80,6 +73,10 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// </summary>
         public void Close()
         {
+            if (_reader != null)
+            {
+                _reader.Close();
+            }
         }
 
         /// <summary>
@@ -87,6 +84,10 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// </summary>
         public void Dispose()
         {
+            if (_reader != null)
+            {
+                _reader.Dispose();
+            }
         }
     }
 }

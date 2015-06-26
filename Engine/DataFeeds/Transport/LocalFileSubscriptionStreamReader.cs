@@ -16,6 +16,7 @@
 
 using System.IO;
 using Ionic.Zip;
+using QuantConnect.Data;
 
 namespace QuantConnect.Lean.Engine.DataFeeds.Transport
 {
@@ -24,8 +25,8 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
     /// </summary>
     public class LocalFileSubscriptionStreamReader : IStreamReader
     {
-        private readonly StreamReader _streamReader;
         private readonly ZipFile _zipFile;
+        private readonly DataStreamReader _reader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileSubscriptionStreamReader"/> class.
@@ -33,10 +34,27 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// <param name="source">The local file to be read</param>
         public LocalFileSubscriptionStreamReader(string source)
         {
-            // unzip if necessary
-            _streamReader = source.GetExtension() == ".zip"
-                ? Compression.Unzip(source, out _zipFile)
-                : new StreamReader(source);
+            string ext = source.GetExtension();
+
+            Stream stream;
+            DataStreamFormat dataFormat;
+            // get the data format and unzip if necessary
+            if (ext == ".zip")
+            {
+                stream = Compression.Unzip(source, out _zipFile, out dataFormat);
+            }
+            else
+            {
+                // Commented lines still here for unfinished performance testing purposes
+                //byte[] bytes = File.ReadAllBytes(source);
+                //stream = new MemoryStream(bytes);
+
+                stream = new FileStream(source, FileMode.Open, FileAccess.Read);
+
+                dataFormat = ext == ".qcb" ? DataStreamFormat.Qcb : DataStreamFormat.Csv;
+            }
+
+            _reader = new DataStreamReader(stream, dataFormat);
         }
 
         /// <summary>
@@ -52,15 +70,15 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// </summary>
         public bool EndOfStream
         {
-            get { return _streamReader == null || _streamReader.EndOfStream; }
+            get { return _reader == null || _reader.EndOfStream; }
         }
 
         /// <summary>
-        /// Gets the next line/batch of content from the stream 
+        /// Gets the data stream reader used
         /// </summary>
-        public string ReadLine()
+        public DataStreamReader GetDataStreamReader()
         {
-            return _streamReader.ReadLine();
+            return _reader;
         }
 
         /// <summary>
@@ -68,9 +86,9 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// </summary>
         public void Close()
         {
-            if (_streamReader != null)
+            if (_reader != null)
             {
-                _streamReader.Close();
+                _reader.Close();
             }
         }
 
@@ -79,10 +97,11 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         /// </summary>
         public void Dispose()
         {
-            if (_streamReader != null)
+            if (_reader != null)
             {
-                _streamReader.Dispose();
+                _reader.Dispose();
             }
+
             if (_zipFile != null)
             {
                 _zipFile.Dispose();

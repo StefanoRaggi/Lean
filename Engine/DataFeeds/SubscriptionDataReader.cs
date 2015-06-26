@@ -269,20 +269,21 @@ namespace QuantConnect.Lean.Engine.DataFeeds
                     return false;
                 }
 
+                var streamReader = _reader.GetDataStreamReader();
+
                 //Log.Debug("SubscriptionDataReader.MoveNext(): Launching While-InstanceNotNull && not EOS: " + reader.EndOfStream);
                 //Keep looking until output's an instance:
                 while (instance == null && !_reader.EndOfStream)
                 {
-                    //Get the next string line from file, create instance of BaseData:
-                    var line = _reader.ReadLine();
+                    //Read a block or line of data from stream , create instance of BaseData:
                     try
                     {
-                        instance = _dataFactory.Reader(_config, line, _date, _isLiveMode);
+                        instance = _dataFactory.Reader(_config, streamReader, _date, _isLiveMode);
                     }
                     catch (Exception err)
                     {
                         //Log.Debug("SubscriptionDataReader.MoveNext(): Error invoking instance: " + err.Message);
-                        _resultHandler.RuntimeError("Error invoking " + _config.Symbol + " data reader. Line: " + line + " Error: " + err.Message, err.StackTrace);
+                        _resultHandler.RuntimeError("Error invoking " + _config.Symbol + " data reader. Error: " + err.Message, err.StackTrace);
                         _endOfStream = true;
                         continue;
                     }
@@ -452,7 +453,6 @@ namespace QuantConnect.Lean.Engine.DataFeeds
         {
             throw new NotImplementedException("Reset method not implemented. Assumes loop will only be used once.");
         }
-
 
         /// <summary>
         /// Fetch and set the location of the data from the user's BaseData factory:

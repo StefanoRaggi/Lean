@@ -16,6 +16,7 @@
 
 using System.IO;
 using System.Net;
+using QuantConnect.Data;
 
 namespace QuantConnect.Lean.Engine.DataFeeds.Transport
 {
@@ -28,7 +29,7 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         private readonly IStreamReader _streamReader;
 
         /// <summary>
-        /// Initializes a new insance of the <see cref="RemoteFileSubscriptionStreamReader"/> class.
+        /// Initializes a new instance of the <see cref="RemoteFileSubscriptionStreamReader"/> class.
         /// </summary>
         /// <param name="source">The remote url to be downloaded via web client</param>
         /// <param name="downloadDirectory">The local directory and destination of the download</param>
@@ -65,11 +66,11 @@ namespace QuantConnect.Lean.Engine.DataFeeds.Transport
         }
 
         /// <summary>
-        /// Gets the next line/batch of content from the stream 
+        /// Gets the data stream reader used
         /// </summary>
-        public string ReadLine()
+        public DataStreamReader GetDataStreamReader()
         {
-            return _streamReader.ReadLine();
+            return _streamReader.GetDataStreamReader();
         }
 
         /// <summary>
