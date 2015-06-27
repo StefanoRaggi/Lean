@@ -13,39 +13,15 @@
  * limitations under the License.
 */
 
-using System.IO;
-
 namespace QuantConnect.Data.Binary
 {
     // Important: this is an experimental data format and is subject to change
 
-    public class QcbFileHeader
+    public struct QcbHeader
     {
         public int Version;
         public int Flags;
         public decimal TickSize;     // TickSize for Futures, PipetteSize for Forex
         public int TimeSliceTicks;
-
-        public QcbFileHeader()
-        {
-            Version = 1;
-            Flags = 0;
-        }
-
-        public void Write(BinaryWriter writer)
-        {
-            writer.Write(Version);
-            writer.Write(Flags);
-            writer.Write(TickSize);
-            writer.Write(TimeSliceTicks);
-        }
-
-        public void Read(BinaryReader reader)
-        {
-            Version = reader.ReadInt32();
-            Flags = reader.ReadInt32();
-            TickSize = reader.ReadDecimal();
-            TimeSliceTicks = reader.ReadInt32();
-        }
     }
 }

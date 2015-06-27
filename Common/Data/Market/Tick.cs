@@ -279,7 +279,7 @@ namespace QuantConnect.Data.Market
             {
                 case DataStreamFormat.Qcb:
                     var tick = streamReader.BinaryReader.ReadTick();
-                    return new Tick(tick.Timestamp, config.Symbol, tick.BidPrice, tick.AskPrice);
+                    return new Tick(tick.GetTimestamp(), config.Symbol, tick.GetMidPrice(), tick.GetBidPrice(), tick.GetAskPrice());
 
                 default:
                     string line = streamReader.TextReader.ReadLine();

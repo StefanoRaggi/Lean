@@ -27,7 +27,7 @@ namespace QuantConnect.Data
     {
         private readonly Stream _baseStream;
         private readonly StreamReader _streamReader;
-        private readonly QcbFile _binaryReader;
+        private readonly QcbReader _binaryReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStreamReader"/> class.
@@ -41,7 +41,7 @@ namespace QuantConnect.Data
 
             if (dataFormat == DataStreamFormat.Qcb)
             {
-                _binaryReader = new QcbFile(new BinaryReader(stream));
+                _binaryReader = new QcbReader(stream);
             }
             else
             {
@@ -57,7 +57,7 @@ namespace QuantConnect.Data
         /// <summary>
         /// Returns the reader for the underlying binary stream
         /// </summary>
-        public QcbFile BinaryReader { get { return _binaryReader; } }
+        public QcbReader BinaryReader { get { return _binaryReader; } }
 
         /// <summary>
         /// Returns the reader for the underlying text stream
