@@ -90,6 +90,10 @@
     <Compile Include="BasicTemplateLibrary.cs" />
     <Compile Include="CustomFrameworkModelsAlgorithm.cs" />
     <Compile Include="FinancialAdvisorDemoAlgorithm.cs" />
+    <Compile Include="ForexDailyDataPointsRegressionAlgorithm.cs" />
+    <Compile Include="ForexInternalFeedOnDataSameResolutionRegressionAlgorithm.cs" />
+    <Compile Include="ForexInternalFeedOnDataRegressionAlgorithm.cs" />
+    <Compile Include="ForexInternalFeedRegressionAlgorithm.cs" />
     <Compile Include="RollingWindowAlgorithm.cs" />
     <Compile Include="BasicTemplateDailyAlgorithm.cs" />
     <Compile Include="BasicTemplateFxcmVolumeAlgorithm.cs" />
