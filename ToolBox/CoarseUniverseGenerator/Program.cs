@@ -20,8 +20,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Ionic.Zip;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QuantConnect.Data.Auxiliary;
+using QuantConnect.Data.Fundamental;
 using QuantConnect.Util;
 using Log = QuantConnect.Logging.Log;
 
@@ -172,6 +174,9 @@ namespace QuantConnect.ToolBox.CoarseUniverseGenerator
             }
             var fineFundamentalFolder = Path.Combine(fundamentalDirectoryInfo.FullName, "fine");
 
+            var mapFileProvider = new LocalDiskMapFileProvider();
+            var factorFileProvider = new LocalDiskFactorFileProvider(mapFileProvider);
+
             // open up each daily file to get the values and append to the daily coarse files
             foreach (var file in Directory.EnumerateFiles(dailyFolder))
             {
@@ -199,11 +204,19 @@ namespace QuantConnect.ToolBox.CoarseUniverseGenerator
 
                     // check if symbol has any fine fundamental data
                     var firstFineSymbolDate = DateTime.MaxValue;
+                    var fineFileList = new List<string>();
+                    var fineFileCache = new Dictionary<string, FineFundamental>();
                     if (Directory.Exists(fineFundamentalFolder))
                     {
                         var fineSymbolFolder = Path.Combine(fineFundamentalFolder, symbol.ToLower());
 
-                        var firstFineSymbolFileName = Directory.Exists(fineSymbolFolder) ? Directory.GetFiles(fineSymbolFolder).OrderBy(x => x).FirstOrDefault() : string.Empty;
+                        var firstFineSymbolFileName = string.Empty;
+                        if (Directory.Exists(fineSymbolFolder))
+                        {
+                            fineFileList = Directory.GetFiles(fineSymbolFolder).OrderBy(x => x).ToList();
+                            firstFineSymbolFileName = fineFileList.DefaultIfEmpty(string.Empty).FirstOrDefault();
+                        }
+
                         if (firstFineSymbolFileName.Length > 0)
                         {
                             firstFineSymbolDate = DateTime.ParseExact(Path.GetFileNameWithoutExtension(firstFineSymbolFileName), "yyyyMMdd", CultureInfo.InvariantCulture);
@@ -264,8 +277,35 @@ namespace QuantConnect.ToolBox.CoarseUniverseGenerator
                             // check if symbol has fine fundamental data for the current date
                             var hasFundamentalDataForDate = date >= firstFineSymbolDate;
 
-                            // sid,symbol,close,volume,dollar volume,has fundamental data
-                            var coarseFileLine = sid + "," + symbol + "," + close + "," + volume + "," + Math.Truncate(dollarVolume) + "," + hasFundamentalDataForDate;
+                            var peRatio = 0m;
+                            if (hasFundamentalDataForDate)
+                            {
+                                // get most recent fine fundamental data before current date
+                                var currentFineFile = fineFileList.Last(x => DateTime.ParseExact(Path.GetFileNameWithoutExtension(x), "yyyyMMdd", CultureInfo.InvariantCulture) <= date);
+
+                                FineFundamental fine;
+                                if (!fineFileCache.TryGetValue(currentFineFile, out fine))
+                                {
+                                    ZipFile zipFile;
+                                    using (var sr = Compression.Unzip(currentFineFile, out zipFile))
+                                    {
+                                        var json = sr.ReadToEnd();
+                                        fine = JsonConvert.DeserializeObject<FineFundamental>(json);
+                                        fineFileCache.Add(currentFineFile, fine);
+                                    }
+                                    zipFile.DisposeSafely();
+                                }
+
+                                peRatio = fine.ValuationRatios.PERatio;
+                            }
+
+                            // get price scale factor from factor files
+                            var leanSymbol = new Symbol(sid, symbol);
+                            var factorFile = factorFileProvider.Get(leanSymbol);
+                            var priceScaleFactor = factorFile?.GetPriceScaleFactor(date) ?? 1m;
+
+                            // sid,symbol,close,volume,dollar volume,has fundamental data,price scale factor,P/E ratio
+                            var coarseFileLine =$"{sid},{symbol},{close},{volume},{Math.Truncate(dollarVolume)},{hasFundamentalDataForDate},{priceScaleFactor},{peRatio}";
 
                             StreamWriter writer;
                             if (!writers.TryGetValue(coarseFile, out writer))
