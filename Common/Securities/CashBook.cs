@@ -22,6 +22,7 @@ using System.Text;
 using QuantConnect.Data;
 using System.Collections.Concurrent;
 using QuantConnect.Data.UniverseSelection;
+using QuantConnect.Interfaces;
 using QuantConnect.Logging;
 
 namespace QuantConnect.Securities
@@ -47,12 +48,19 @@ namespace QuantConnect.Securities
         }
 
         /// <summary>
+        /// Gets the currency converter used to convert cash amounts between currencies
+        /// </summary>
+        public ICurrencyConverter CurrencyConverter { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashBook"/> class.
         /// </summary>
         public CashBook()
         {
             _currencies = new ConcurrentDictionary<string, Cash>();
             _currencies.AddOrUpdate(AccountCurrency, new Cash(AccountCurrency, 0, 1.0m));
+
+            CurrencyConverter = new CashBookCurrencyConverter(this);
         }
 
         /// <summary>
