@@ -11,35 +11,41 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
 */
 
-using System.Linq;
-using QuantConnect.Orders.Fees;
-using QuantConnect.Securities;
+using System;
 
-namespace QuantConnect.Util
+namespace QuantConnect.Orders
 {
     /// <summary>
-    /// Provides useful infrastructure methods to the <see cref="Security"/> class.
-    /// These are added in this way to avoid mudding the class's public API
+    /// Represents a cash amount in a given currency
     /// </summary>
-    public static class SecurityExtensions
+    public class CashAmount
     {
         /// <summary>
-        /// Determines if all subscriptions for the security are internal feeds
+        /// The amount of cash
         /// </summary>
-        public static bool IsInternalFeed(this Security security)
-        {
-            return security.Subscriptions.All(x => x.IsInternalFeed);
-        }
+        public decimal Amount { get; set; }
 
         /// <summary>
-        /// Fee model used to compute order fees for this security
+        /// The currency in which the cash amount is denominated
         /// </summary>
-        public static FeeModelWrapper GetFeeModel(this Security security)
+        public string Currency { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CashAmount"/> class
+        /// </summary>
+        /// <param name="amount">The amount</param>
+        /// <param name="currency">The currency</param>
+        public CashAmount(decimal amount, string currency)
         {
-            return security.FeeModel as FeeModelWrapper ?? new FeeModelWrapper(security.FeeModel);
+            if (string.IsNullOrWhiteSpace(currency))
+            {
+                throw new Exception("CashAmount(): currency cannot be null or empty.");
+            }
+
+            Amount = amount;
+            Currency = currency;
         }
     }
 }

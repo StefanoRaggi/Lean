@@ -26,6 +26,7 @@ using QuantConnect.Securities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using QuantConnect.Orders;
 using QuantConnect.Tests.ToolBox;
 using QuantConnect.ToolBox;
 using QuantConnect.Util;
@@ -504,7 +505,8 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                 SecurityExchangeHours.AlwaysOpen(TimeZones.Utc),
                 subscriptionDataConfig,
                 new Cash(CashBook.AccountCurrency, 0, 1m),
-                SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                new CurrencyConverter(new CashBook()));
         }
     }
 }

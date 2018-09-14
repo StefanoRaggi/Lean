@@ -77,22 +77,22 @@ namespace QuantConnect.Tests.Algorithm.Framework.Execution
 
             var time = new DateTime(2018, 8, 2, 16, 0, 0);
             var historyProvider = new Mock<IHistoryProvider>();
-            historyProvider.Setup(m => m.GetHistory(It.IsAny<IEnumerable<HistoryRequest>>(), It.IsAny<DateTimeZone>()))
-                .Returns(historicalPrices.Select((x,i) =>
-                    new Slice(time.AddMinutes(i),
-                        new List<BaseData>
-                        {
-                            new TradeBar
-                            {
-                                Time = time.AddMinutes(i),
-                                Symbol = Symbols.AAPL,
-                                Open = Convert.ToDecimal(x),
-                                High = Convert.ToDecimal(x),
-                                Low = Convert.ToDecimal(x),
-                                Close = Convert.ToDecimal(x),
-                                Volume = 100m
-                            }
-                        })));
+            //historyProvider.Setup(m => m.GetHistory(It.IsAny<IEnumerable<HistoryRequest>>(), It.IsAny<DateTimeZone>()))
+            //    .Returns(historicalPrices.Select((x,i) =>
+            //        new Slice(time.AddMinutes(i),
+            //            new List<BaseData>
+            //            {
+            //                new TradeBar
+            //                {
+            //                    Time = time.AddMinutes(i),
+            //                    Symbol = Symbols.AAPL,
+            //                    Open = Convert.ToDecimal(x),
+            //                    High = Convert.ToDecimal(x),
+            //                    Low = Convert.ToDecimal(x),
+            //                    Close = Convert.ToDecimal(x),
+            //                    Volume = 100m
+            //                }
+            //            })));
 
             var algorithm = new QCAlgorithmFramework();
             algorithm.SubscriptionManager.SetDataManager(new DataManager());

@@ -25,6 +25,7 @@ using QuantConnect.Securities.Equity;
 using QuantConnect.Tests.Common.Securities;
 using System;
 using QuantConnect.Lean.Engine.DataFeeds;
+using QuantConnect.Orders;
 
 namespace QuantConnect.Tests.Python
 {
@@ -142,7 +143,8 @@ class CustomBuyingPowerModel(SecurityMarginModel):
                 SecurityExchangeHours.AlwaysOpen(TimeZones.Utc),
                 subscriptionDataConfig,
                 new Cash(CashBook.AccountCurrency, 0, 1m),
-                SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                new CurrencyConverter(new CashBook()));
         }
     }
 }

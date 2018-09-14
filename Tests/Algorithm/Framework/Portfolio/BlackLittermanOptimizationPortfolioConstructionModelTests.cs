@@ -159,7 +159,7 @@ namespace QuantConnect.Tests.Algorithm.Framework.Portfolio
             var timezone = _algorithm.TimeZone;
             var exchangeHours = SecurityExchangeHours.AlwaysOpen(timezone);
             var config = new SubscriptionDataConfig(typeof(TradeBar), symbol, resolution, timezone, timezone, true, false, false);
-            return new Security(exchangeHours, config, new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"));
+            return new Security(exchangeHours, config, new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"), _algorithm.Portfolio.CashBook.CurrencyConverter);
         }
 
         private Symbol GetSymbol(string ticker) => Symbol.Create(ticker, SecurityType.Equity, Market.USA);

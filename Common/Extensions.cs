@@ -27,6 +27,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using NodaTime;
 using Python.Runtime;
+using QuantConnect.Interfaces;
 using QuantConnect.Orders;
 using QuantConnect.Securities;
 using Timer = System.Timers.Timer;
@@ -1256,6 +1257,29 @@ namespace QuantConnect
                     yield return list;
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts a cash amount between two different currencies
+        /// </summary>
+        /// <param name="cashAmount">The <see cref="CashAmount"/> instance to convert</param>
+        /// <param name="destinationCurrency">The destination currency</param>
+        /// <param name="currencyConverter">The currency converter</param>
+        /// <returns>A new <see cref="CashAmount"/> instance denominated in the destination currency</returns>
+        public static CashAmount ConvertTo(this CashAmount cashAmount, string destinationCurrency, ICurrencyConverter currencyConverter)
+        {
+            return currencyConverter.Convert(cashAmount, destinationCurrency);
+        }
+
+        /// <summary>
+        /// Converts a cash amount to the account currency
+        /// </summary>
+        /// <param name="cashAmount">The <see cref="CashAmount"/> instance to convert</param>
+        /// <param name="currencyConverter">The currency converter</param>
+        /// <returns>A new <see cref="CashAmount"/> instance denominated in the account currency</returns>
+        public static CashAmount ConvertToAccountCurrency(this CashAmount cashAmount, ICurrencyConverter currencyConverter)
+        {
+            return currencyConverter.ConvertToAccountCurrency(cashAmount);
         }
     }
 }

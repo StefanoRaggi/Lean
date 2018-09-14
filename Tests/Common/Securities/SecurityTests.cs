@@ -19,6 +19,7 @@ using NodaTime;
 using NUnit.Framework;
 using QuantConnect.Data;
 using QuantConnect.Data.Market;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 using QuantConnect.Orders.Fills;
 using QuantConnect.Orders.Fees;
@@ -35,7 +36,7 @@ namespace QuantConnect.Tests.Common.Securities
         {
             var exchangeHours = SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork);
             var config = CreateTradeBarConfig();
-            var security = new Security(exchangeHours, config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(exchangeHours, config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
 
             Assert.AreEqual(config, security.Subscriptions.Single());
             Assert.AreEqual(config.Symbol, security.Symbol);
@@ -152,7 +153,7 @@ namespace QuantConnect.Tests.Common.Securities
         [Test]
         public void DefaultDataNormalizationModeForOptionsIsRaw()
         {
-            var option = new Option(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY_P_192_Feb19_2016, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)));
+            var option = new Option(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY_P_192_Feb19_2016, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)), new CurrencyConverter(new CashBook()));
 
             Assert.AreEqual(option.DataNormalizationMode, DataNormalizationMode.Raw);
         }
@@ -160,7 +161,7 @@ namespace QuantConnect.Tests.Common.Securities
         [Test]
         public void SetDataNormalizationForOptions()
         {
-            var option = new Option(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY_P_192_Feb19_2016, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)));
+            var option = new Option(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY_P_192_Feb19_2016, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)), new CurrencyConverter(new CashBook()));
 
             Assert.DoesNotThrow(() => { option.SetDataNormalizationMode(DataNormalizationMode.Raw); });
 
@@ -173,7 +174,7 @@ namespace QuantConnect.Tests.Common.Securities
         [Test]
         public void SetDataNormalizationForEquities()
         {
-            var equity = new QuantConnect.Securities.Equity.Equity(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var equity = new QuantConnect.Securities.Equity.Equity(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
 
             Assert.DoesNotThrow(() => { equity.SetDataNormalizationMode(DataNormalizationMode.Raw); });
             Assert.DoesNotThrow(() => { equity.SetDataNormalizationMode(DataNormalizationMode.Adjusted); });
@@ -206,7 +207,7 @@ namespace QuantConnect.Tests.Common.Securities
 
         private Security GetSecurity()
         {
-            return new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            return new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
         }
 
         private static SubscriptionDataConfig CreateTradeBarConfig()

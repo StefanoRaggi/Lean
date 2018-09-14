@@ -824,7 +824,7 @@ namespace QuantConnect.Lean.Engine
                 }
 
                 // make the history request and build time slices
-                foreach (var slice in history.GetHistory(historyRequests, timeZone))
+                foreach (var slice in history.GetHistory(historyRequests, timeZone, algorithm.Portfolio.CashBook.CurrencyConverter))
                 {
                     TimeSlice timeSlice;
                     try
@@ -972,7 +972,7 @@ namespace QuantConnect.Lean.Engine
 
                     if (historyReq != null && algorithm.HistoryProvider != null)
                     {
-                        var history = algorithm.HistoryProvider.GetHistory(historyReq, algorithm.TimeZone);
+                        var history = algorithm.HistoryProvider.GetHistory(historyReq, algorithm.TimeZone, algorithm.Portfolio.CashBook.CurrencyConverter);
                         if (history != null)
                         {
                             foreach (var slice in history)

@@ -209,7 +209,7 @@ namespace QuantConnect.ToolBox.IQFeed
         /// <param name="requests">The historical data requests</param>
         /// <param name="sliceTimeZone">The time zone used when time stamping the slice instances</param>
         /// <returns>An enumerable of the slices of data covering the span specified in each request</returns>
-        public IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone)
+        public IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone, ICurrencyConverter currencyConverter)
         {
             foreach (var request in requests)
             {

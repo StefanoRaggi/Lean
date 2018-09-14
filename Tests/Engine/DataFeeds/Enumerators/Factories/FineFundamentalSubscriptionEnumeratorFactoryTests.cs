@@ -26,6 +26,7 @@ using QuantConnect.Data.Fundamental;
 using QuantConnect.Data.UniverseSelection;
 using QuantConnect.Lean.Engine.DataFeeds;
 using QuantConnect.Lean.Engine.DataFeeds.Enumerators.Factories;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 using Log = QuantConnect.Logging.Log;
 
@@ -41,7 +42,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds.Enumerators.Factories
             var rows = new List<FineFundamental>();
 
             var config = new SubscriptionDataConfig(typeof(FineFundamental), parameters.Symbol, Resolution.Daily, TimeZones.NewYork, TimeZones.NewYork, false, false, false, false, TickType.Trade, false);
-            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), config, new Cash(CashBook.AccountCurrency, 0, 1), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), config, new Cash(CashBook.AccountCurrency, 0, 1), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
             var request = new SubscriptionRequest(false, null, security, config, parameters.StartDate, parameters.EndDate);
             var fileProvider = new DefaultDataProvider();
 
@@ -95,7 +96,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds.Enumerators.Factories
             var endDate = new DateTime(2014, 4, 30);
 
             var config = new SubscriptionDataConfig(typeof(FineFundamental), symbol, Resolution.Daily, TimeZones.NewYork, TimeZones.NewYork, false, false, false, false, TickType.Trade, false);
-            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), config, new Cash(CashBook.AccountCurrency, 0, 1), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), config, new Cash(CashBook.AccountCurrency, 0, 1), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
             var request = new SubscriptionRequest(false, null, security, config, startDate, endDate);
             var fileProvider = new DefaultDataProvider();
             var factory = new FineFundamentalSubscriptionEnumeratorFactory(false);

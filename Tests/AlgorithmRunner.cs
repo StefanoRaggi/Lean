@@ -198,14 +198,14 @@ namespace QuantConnect.Tests
         /// </summary>
         class RegressionHistoryProviderWrapper : SubscriptionDataReaderHistoryProvider
         {
-            public override IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone)
+            public override IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone, ICurrencyConverter currencyConverter)
             {
                 requests = requests.ToList();
                 if (requests.Any(r => RegressionSetupHandlerWrapper.Algorithm.UniverseManager.ContainsKey(r.Symbol)))
                 {
                     throw new Exception("History requests should not be submitted for universe symbols");
                 }
-                return base.GetHistory(requests, sliceTimeZone);
+                return base.GetHistory(requests, sliceTimeZone, currencyConverter);
             }
         }
     }

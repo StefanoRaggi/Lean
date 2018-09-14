@@ -17,6 +17,7 @@ using NUnit.Framework;
 using QuantConnect.Brokerages;
 using QuantConnect.Data;
 using QuantConnect.Data.Market;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 
 namespace QuantConnect.Tests.Common.Brokerages
@@ -31,7 +32,7 @@ namespace QuantConnect.Tests.Common.Brokerages
             {
                 return new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                     new SubscriptionDataConfig(typeof(TradeBar), Symbol, Resolution.Minute, TimeZones.NewYork, TimeZones.NewYork, false, false, false),
-                    new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                    new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
             }
         }
 

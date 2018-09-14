@@ -77,7 +77,7 @@ namespace QuantConnect.Tests.Algorithm.Framework.Execution
 
             var time = new DateTime(2018, 8, 2, 16, 0, 0);
             var historyProvider = new Mock<IHistoryProvider>();
-            historyProvider.Setup(m => m.GetHistory(It.IsAny<IEnumerable<HistoryRequest>>(), It.IsAny<DateTimeZone>()))
+            historyProvider.Setup(m => m.GetHistory(It.IsAny<IEnumerable<HistoryRequest>>(), It.IsAny<DateTimeZone>(), It.IsAny<ICurrencyConverter>()))
                 .Returns(historicalPrices.Select((x,i) =>
                     new Slice(time.AddMinutes(i),
                         new List<BaseData>

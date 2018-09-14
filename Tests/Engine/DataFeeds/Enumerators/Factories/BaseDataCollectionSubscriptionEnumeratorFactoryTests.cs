@@ -23,6 +23,7 @@ using QuantConnect.Data.UniverseSelection;
 using QuantConnect.Lean.Engine.DataFeeds;
 using QuantConnect.Lean.Engine.DataFeeds.Enumerators.Factories;
 using QuantConnect.Logging;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 
 namespace QuantConnect.Tests.Engine.DataFeeds.Enumerators.Factories
@@ -36,7 +37,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds.Enumerators.Factories
         {
             var symbol = CoarseFundamental.CreateUniverseSymbol(Market.USA);
             var config = new SubscriptionDataConfig(typeof(CoarseFundamental), symbol, Resolution.Daily, TimeZones.NewYork, TimeZones.NewYork, false, false, false, false, TickType.Trade, false);
-            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), config, new Cash(CashBook.AccountCurrency, 0, 1), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), config, new Cash(CashBook.AccountCurrency, 0, 1), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
 
             var universeSettings = new UniverseSettings(Resolution.Daily, 2m, true, false, TimeSpan.FromDays(1));
             var securityInitializer = new BrokerageModelSecurityInitializer(new DefaultBrokerageModel(), SecuritySeeder.Null);

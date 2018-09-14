@@ -17,6 +17,7 @@ using System;
 using NUnit.Framework;
 using QuantConnect.Data;
 using QuantConnect.Data.Market;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 
 namespace QuantConnect.Tests.Common.Securities
@@ -36,7 +37,7 @@ namespace QuantConnect.Tests.Common.Securities
             // settlement at T+3, 8:00 AM
             var model = new DelayedSettlementModel(3, TimeSpan.FromHours(8));
             var config = CreateTradeBarConfig(Symbols.SPY);
-            var security = new Security(SecurityExchangeHoursTests.CreateUsEquitySecurityExchangeHours(), config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHoursTests.CreateUsEquitySecurityExchangeHours(), config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
 
             portfolio.SetCash(3000);
             Assert.AreEqual(3000, portfolio.Cash);
@@ -83,7 +84,7 @@ namespace QuantConnect.Tests.Common.Securities
             // settlement at T+3, 8:00 AM
             var model = new DelayedSettlementModel(3, TimeSpan.FromHours(8));
             var config = CreateTradeBarConfig(Symbols.SPY);
-            var security = new Security(SecurityExchangeHoursTests.CreateUsEquitySecurityExchangeHours(), config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHoursTests.CreateUsEquitySecurityExchangeHours(), config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
 
             portfolio.SetCash(3000);
             Assert.AreEqual(3000, portfolio.Cash);

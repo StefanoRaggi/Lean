@@ -24,6 +24,7 @@ using QuantConnect.Data.Auxiliary;
 using QuantConnect.Data.Market;
 using QuantConnect.Lean.Engine.DataFeeds;
 using QuantConnect.Lean.Engine.HistoricalData;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 
 namespace QuantConnect.Tests.Common.Securities
@@ -76,12 +77,14 @@ namespace QuantConnect.Tests.Common.Securities
             _tradeBarSecurity = new Security(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc),
                                         _tradeBarConfig,
                                         new Cash(CashBook.AccountCurrency, 0, 1m),
-                                        SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                                        SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                                        new CurrencyConverter(new CashBook()));
 
             _quoteBarSecurity = new Security(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc),
                                     _quoteBarConfig,
                                     new Cash(CashBook.AccountCurrency, 0, 1m),
-                                    SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                                    SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                                    new CurrencyConverter(new CashBook()));
 
             _brokerageInitializer = new BrokerageModelSecurityInitializer(new DefaultBrokerageModel(),
                                                                           new FuncSecuritySeeder(_algo.GetLastKnownPrice));

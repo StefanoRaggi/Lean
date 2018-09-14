@@ -65,15 +65,16 @@ namespace QuantConnect.Lean.Engine.HistoricalData
         /// </summary>
         /// <param name="requests">The historical data requests</param>
         /// <param name="sliceTimeZone">The time zone used when time stamping the slice instances</param>
+        /// <param name="currencyConverter">The currency converter</param>
         /// <returns>An enumerable of the slices of data covering the span specified in each request</returns>
-        public override IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone)
+        public override IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone, ICurrencyConverter currencyConverter)
         {
             // create subscription objects from the configs
             var subscriptions = new List<Subscription>();
             foreach (var request in requests)
             {
                 var history = _brokerage.GetHistory(request);
-                var subscription = CreateSubscription(request, history);
+                var subscription = CreateSubscription(request, history, currencyConverter);
                 subscription.MoveNext(); // prime pump
                 subscriptions.Add(subscription);
             }
@@ -84,7 +85,7 @@ namespace QuantConnect.Lean.Engine.HistoricalData
         /// <summary>
         /// Creates a subscription to process the history request
         /// </summary>
-        private static Subscription CreateSubscription(HistoryRequest request, IEnumerable<BaseData> history)
+        private static Subscription CreateSubscription(HistoryRequest request, IEnumerable<BaseData> history, ICurrencyConverter currencyConverter)
         {
             // data reader expects these values in local times
             var start = request.StartTimeUtc.ConvertFromUtc(request.ExchangeHours.TimeZone);
@@ -104,7 +105,7 @@ namespace QuantConnect.Lean.Engine.HistoricalData
                 request.DataNormalizationMode
                 );
 
-            var security = new Security(request.ExchangeHours, config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(request.ExchangeHours, config, new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), currencyConverter);
 
             var reader = history.GetEnumerator();
 

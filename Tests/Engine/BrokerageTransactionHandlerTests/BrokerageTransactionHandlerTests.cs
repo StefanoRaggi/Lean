@@ -765,7 +765,7 @@ namespace QuantConnect.Tests.Engine.BrokerageTransactionHandlerTests
             {
             }
 
-            public IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone)
+            public IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone, ICurrencyConverter currencyConverter)
             {
                 return Enumerable.Empty<Slice>();
             }

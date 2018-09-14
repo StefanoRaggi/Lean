@@ -27,6 +27,7 @@ using QuantConnect.Brokerages.InteractiveBrokers;
 using QuantConnect.Configuration;
 using QuantConnect.Data;
 using QuantConnect.Data.Market;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 using Order = QuantConnect.Orders.Order;
 
@@ -150,7 +151,7 @@ namespace QuantConnect.Tests.Brokerages.InteractiveBrokers
             var securityProvider = new SecurityProvider();
             securityProvider[Symbols.USDJPY] = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                 new SubscriptionDataConfig(typeof(TradeBar), Symbols.USDJPY, Resolution.Minute, TimeZones.NewYork, TimeZones.NewYork, false, false, false),
-                new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
 
             var brokerage = new InteractiveBrokersBrokerage(new QCAlgorithm(), new OrderProvider(_orders), securityProvider);
             brokerage.Connect();

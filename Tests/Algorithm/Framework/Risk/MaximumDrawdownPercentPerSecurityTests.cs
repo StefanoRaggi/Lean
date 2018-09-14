@@ -20,6 +20,7 @@ using NUnit.Framework;
 using Python.Runtime;
 using QuantConnect.Algorithm.Framework;
 using QuantConnect.Algorithm.Framework.Risk;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 using QuantConnect.Securities.Equity;
 
@@ -49,7 +50,8 @@ namespace QuantConnect.Tests.Algorithm.Framework.Risk
                 Symbols.AAPL,
                 SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                 new Cash(CashBook.AccountCurrency, 0, 1),
-                SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                new CurrencyConverter(new CashBook()));
             security.Setup(m => m.Invested).Returns(invested);
 
             var holding = new Mock<EquityHolding>(security.Object);

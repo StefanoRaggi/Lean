@@ -46,7 +46,8 @@ namespace QuantConnect.Algorithm.CSharp
             _spy = _security.Symbol;
 
             // set our models
-            _security.SetFeeModel(new CustomFeeModel(this));
+            _security.SetFeeModel(new NewCustomFeeModel(this));
+            //_security.SetFeeModel(new CustomFeeModel(this));
             _security.SetFillModel(new CustomFillModel(this));
             _security.SetSlippageModel(new CustomSlippageModel(this));
         }
@@ -111,6 +112,25 @@ namespace QuantConnect.Algorithm.CSharp
                 _algorithm.Log("CustomFillModel: " + fill);
 
                 return fill;
+            }
+        }
+
+        public class NewCustomFeeModel : BaseFeeModel
+        {
+            private readonly QCAlgorithm _algorithm;
+
+            public NewCustomFeeModel(QCAlgorithm algorithm)
+            {
+                _algorithm = algorithm;
+            }
+
+            public override CashAmount GetOrderFee(Security security, Order order)
+            {
+                // custom fee math
+                var fee = Math.Max(1m, security.Price * order.AbsoluteQuantity * 0.00001m);
+
+                _algorithm.Log("NewCustomFeeModel: " + fee);
+                return new CashAmount(fee, CashBook.AccountCurrency);
             }
         }
 

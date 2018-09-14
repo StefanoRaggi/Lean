@@ -233,7 +233,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                     new TestCaseData(Symbols.SPY, Resolution.Tick, TimeSpan.FromSeconds(15), false),
                     new TestCaseData(Symbols.SPY, Resolution.Second, Time.OneMinute, false),
                     new TestCaseData(Symbols.SPY, Resolution.Hour, Time.OneDay, false),
-                    
+
                     // invalid period == empty result
                     new TestCaseData(Symbols.SPY, Resolution.Minute, TimeSpan.FromDays(45), false), // beyond 30 days
                     new TestCaseData(Symbols.SPY, Resolution.Daily, TimeSpan.FromDays(-15), false), // date in future
@@ -274,7 +274,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                                    TickType.Quote)
             };
 
-            var history = historyProvider.GetHistory(requests, TimeZones.Utc);
+            var history = historyProvider.GetHistory(requests, TimeZones.Utc, null);
 
             foreach (var slice in history)
             {

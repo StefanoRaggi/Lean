@@ -19,6 +19,7 @@ using QuantConnect.Data.Market;
 using QuantConnect.Securities;
 using System.Collections.Generic;
 using QuantConnect.Brokerages;
+using QuantConnect.Orders;
 
 namespace QuantConnect.Tests.Brokerages.GDAX
 {
@@ -29,7 +30,7 @@ namespace QuantConnect.Tests.Brokerages.GDAX
         public static Security GetSecurity(decimal price = 1m, SecurityType securityType = SecurityType.Crypto, Resolution resolution = Resolution.Minute)
         {
             return new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.Utc), CreateConfig(securityType, resolution), new Cash(CashBook.AccountCurrency, 1000, price),
-                new SymbolProperties("BTCUSD", CashBook.AccountCurrency, 1, 1, 0.01m));
+                new SymbolProperties("BTCUSD", CashBook.AccountCurrency, 1, 1, 0.01m), new CurrencyConverter(new CashBook()));
         }
 
         private static SubscriptionDataConfig CreateConfig(SecurityType securityType = SecurityType.Crypto, Resolution resolution = Resolution.Minute)

@@ -24,7 +24,7 @@ namespace QuantConnect.Tests.Brokerages.Bitfinex
             {
                 var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                     new SubscriptionDataConfig(typeof(TradeBar), Symbol, Resolution.Minute, TimeZones.NewYork, TimeZones.NewYork, false, false, false),
-                    new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                    new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CurrencyConverter(new CashBook()));
                 security.SetMarketPrice(new Tick(DateTime.UtcNow, Symbol, LowPrice, HighPrice));
 
                 return security;

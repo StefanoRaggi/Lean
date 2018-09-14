@@ -64,7 +64,7 @@ namespace QuantConnect.Tests.Brokerages.GDAX
                     tickType)
             };
 
-            var history = historyProvider.GetHistory(requests, TimeZones.Utc).ToList();
+            var history = historyProvider.GetHistory(requests, TimeZones.Utc, null).ToList();
 
             foreach (var slice in history)
             {

@@ -17,6 +17,7 @@ using System;
 using NUnit.Framework;
 using QuantConnect.Data;
 using QuantConnect.Data.Market;
+using QuantConnect.Orders;
 using QuantConnect.Securities;
 using QuantConnect.Securities.Future;
 using QuantConnect.Securities.Option;
@@ -47,7 +48,7 @@ namespace QuantConnect.Tests.Common.Securities
             var ticker = QuantConnect.Securities.Futures.Softs.Coffee;
             var symbol = Symbol.CreateFuture(ticker, Market.USA, expDate);
 
-            var futureSecurity = new Future(SecurityExchangeHours.AlwaysOpen(tz), new SubscriptionDataConfig(typeof(TradeBar), symbol, Resolution.Minute, tz, tz, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)));
+            var futureSecurity = new Future(SecurityExchangeHours.AlwaysOpen(tz), new SubscriptionDataConfig(typeof(TradeBar), symbol, Resolution.Minute, tz, tz, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)), new CurrencyConverter(new CashBook()));
             futureSecurity.SetMarketPrice(new Tick { Value = price, Time = time });
             futureSecurity.Holdings.SetHoldings(1.5m, 1);
 
@@ -67,7 +68,7 @@ namespace QuantConnect.Tests.Common.Securities
             var ticker = "NOT-A-SYMBOL";
             var symbol = Symbol.CreateFuture(ticker, Market.USA, expDate);
 
-            var futureSecurity = new Future(SecurityExchangeHours.AlwaysOpen(tz), new SubscriptionDataConfig(typeof(TradeBar), symbol, Resolution.Minute, tz, tz, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)));
+            var futureSecurity = new Future(SecurityExchangeHours.AlwaysOpen(tz), new SubscriptionDataConfig(typeof(TradeBar), symbol, Resolution.Minute, tz, tz, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)), new CurrencyConverter(new CashBook()));
             futureSecurity.SetMarketPrice(new Tick { Value = price, Time = time });
             futureSecurity.Holdings.SetHoldings(1.5m, 1);
 
@@ -87,7 +88,7 @@ namespace QuantConnect.Tests.Common.Securities
             var ticker = QuantConnect.Securities.Futures.Financials.EuroDollar;
             var symbol = Symbol.CreateFuture(ticker, Market.USA, expDate);
 
-            var futureSecurity = new Future(SecurityExchangeHours.AlwaysOpen(tz), new SubscriptionDataConfig(typeof(TradeBar), symbol, Resolution.Minute, tz, tz, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)));
+            var futureSecurity = new Future(SecurityExchangeHours.AlwaysOpen(tz), new SubscriptionDataConfig(typeof(TradeBar), symbol, Resolution.Minute, tz, tz, true, false, false), new Cash(CashBook.AccountCurrency, 0, 1m), new OptionSymbolProperties(SymbolProperties.GetDefault(CashBook.AccountCurrency)), new CurrencyConverter(new CashBook()));
             futureSecurity.SetMarketPrice(new Tick { Value = price, Time = time });
             futureSecurity.Holdings.SetHoldings(1.5m, 1);
 

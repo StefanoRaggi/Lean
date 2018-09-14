@@ -590,7 +590,7 @@ namespace QuantConnect.Algorithm
             }
 
             // filter out future data to prevent look ahead bias
-            return ((IAlgorithm)this).HistoryProvider.GetHistory(reqs, timeZone);
+            return ((IAlgorithm)this).HistoryProvider.GetHistory(reqs, timeZone, Portfolio.CashBook.CurrencyConverter);
         }
 
         /// <summary>

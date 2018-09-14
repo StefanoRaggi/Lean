@@ -234,7 +234,7 @@ namespace QuantConnect.Tests.Algorithm
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone)
+            public IEnumerable<Slice> GetHistory(IEnumerable<HistoryRequest> requests, DateTimeZone sliceTimeZone, ICurrencyConverter currencyConverter)
             {
                 var now = DateTime.UtcNow;
                 LastResolutionRequest = requests.First().Resolution;

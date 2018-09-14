@@ -330,7 +330,7 @@ namespace QuantConnect.Tests.Algorithm.Framework.Portfolio
         private Security GetSecurity(Symbol symbol)
         {
             var config = SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc);
-            return new Equity(symbol, config, new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"));
+            return new Equity(symbol, config, new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"), _algorithm.Portfolio.CashBook.CurrencyConverter);
         }
 
         private Insight GetInsight(Symbol symbol, InsightDirection direction, DateTime generatedTimeUtc, TimeSpan? period = null)
