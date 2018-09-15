@@ -657,7 +657,7 @@ namespace QuantConnect.Securities
         /// <param name="feeModel">Model that represents a fee model</param>
         public void SetFeeModel(IFeeModel feeModel)
         {
-            FeeModel = feeModel;
+            FeeModel = new FeeModelWrapper(feeModel);
         }
 
         /// <summary>
