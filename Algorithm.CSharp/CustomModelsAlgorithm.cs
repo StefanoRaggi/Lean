@@ -114,7 +114,7 @@ namespace QuantConnect.Algorithm.CSharp
             }
         }
 
-        public class CustomFeeModel : IFeeModel
+        public class CustomFeeModel : BaseFeeModel
         {
             private readonly QCAlgorithm _algorithm;
 
@@ -123,13 +123,13 @@ namespace QuantConnect.Algorithm.CSharp
                 _algorithm = algorithm;
             }
 
-            public decimal GetOrderFee(Security security, Order order)
+            public override CashAmount GetOrderFee(Security security, Order order)
             {
                 // custom fee math
-                var fee = Math.Max(1m, security.Price*order.AbsoluteQuantity*0.00001m);
+                var fee = Math.Max(1m, security.Price * order.AbsoluteQuantity * 0.00001m);
 
                 _algorithm.Log("CustomFeeModel: " + fee);
-                return fee;
+                return new CashAmount(fee, CashBook.AccountCurrency, security.CurrencyConverter);
             }
         }
 
