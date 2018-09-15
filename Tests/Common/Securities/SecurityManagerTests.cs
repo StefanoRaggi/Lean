@@ -59,7 +59,7 @@ namespace QuantConnect.Tests.Common.Securities
             var timeKeeper = new TimeKeeper(new DateTime(2015, 12, 07));
             var manager = new SecurityManager(timeKeeper);
 
-            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CashBookCurrencyConverter(new CashBook()));
             manager.CollectionChanged += (sender, args) =>
             {
                 if (args.NewItems.OfType<object>().Single() != security)
@@ -82,7 +82,7 @@ namespace QuantConnect.Tests.Common.Securities
             var timeKeeper = new TimeKeeper(new DateTime(2015, 12, 07));
             var manager = new SecurityManager(timeKeeper);
 
-            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CashBookCurrencyConverter(new CashBook()));
             manager.CollectionChanged += (sender, args) =>
             {
                 if (args.NewItems.OfType<object>().Single() != security)
@@ -105,7 +105,7 @@ namespace QuantConnect.Tests.Common.Securities
             var timeKeeper = new TimeKeeper(new DateTime(2015, 12, 07));
             var manager = new SecurityManager(timeKeeper);
 
-            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+            var security = new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork), CreateTradeBarConfig(), new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CashBookCurrencyConverter(new CashBook()));
             manager.Add(security.Symbol, security);
             manager.CollectionChanged += (sender, args) =>
             {

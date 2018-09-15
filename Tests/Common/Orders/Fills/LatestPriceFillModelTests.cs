@@ -99,7 +99,7 @@ namespace QuantConnect.Tests.Common.Orders.Fills
             return new Security(SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc),
                 new SubscriptionDataConfig(typeof(QuoteBar), _symbol, Resolution.Second, TimeZones.Utc, TimeZones.Utc, true, true, false),
                 new Cash(CashBook.AccountCurrency, 0, 1m),
-                SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                SymbolProperties.GetDefault(CashBook.AccountCurrency), new CashBookCurrencyConverter(new CashBook()));
         }
 
         internal class TestableLatestFillModel : LatestPriceFillModel

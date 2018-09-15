@@ -504,7 +504,8 @@ namespace QuantConnect.Tests.Engine.DataFeeds
                 SecurityExchangeHours.AlwaysOpen(TimeZones.Utc),
                 subscriptionDataConfig,
                 new Cash(CashBook.AccountCurrency, 0, 1m),
-                SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                new CashBookCurrencyConverter(new CashBook()));
         }
     }
 }

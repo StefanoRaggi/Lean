@@ -20,6 +20,7 @@ using QuantConnect.Orders.Fills;
 using QuantConnect.Orders.Slippage;
 using QuantConnect.Orders.OptionExercise;
 using Python.Runtime;
+using QuantConnect.Interfaces;
 using QuantConnect.Util;
 
 namespace QuantConnect.Securities.Option
@@ -47,7 +48,8 @@ namespace QuantConnect.Securities.Option
         /// <param name="quoteCurrency">The cash object that represent the quote currency</param>
         /// <param name="config">The subscription configuration for this security</param>
         /// <param name="symbolProperties">The symbol properties for this security</param>
-        public Option(SecurityExchangeHours exchangeHours, SubscriptionDataConfig config, Cash quoteCurrency, OptionSymbolProperties symbolProperties)
+        /// <param name="currencyConverter">The currency converter</param>
+        public Option(SecurityExchangeHours exchangeHours, SubscriptionDataConfig config, Cash quoteCurrency, OptionSymbolProperties symbolProperties, ICurrencyConverter currencyConverter)
             : base(config,
                 quoteCurrency,
                 symbolProperties,
@@ -61,7 +63,8 @@ namespace QuantConnect.Securities.Option
                 Securities.VolatilityModel.Null,
                 new OptionMarginModel(),
                 new OptionDataFilter(),
-                new SecurityPriceVariationModel()
+                new SecurityPriceVariationModel(),
+                currencyConverter
                 )
         {
             ExerciseSettlement = SettlementType.PhysicalDelivery;
@@ -80,7 +83,8 @@ namespace QuantConnect.Securities.Option
         /// <param name="exchangeHours">Defines the hours this exchange is open</param>
         /// <param name="quoteCurrency">The cash object that represent the quote currency</param>
         /// <param name="symbolProperties">The symbol properties for this security</param>
-        public Option(Symbol symbol, SecurityExchangeHours exchangeHours, Cash quoteCurrency, OptionSymbolProperties symbolProperties)
+        /// <param name="currencyConverter">The currency converter</param>
+        public Option(Symbol symbol, SecurityExchangeHours exchangeHours, Cash quoteCurrency, OptionSymbolProperties symbolProperties, ICurrencyConverter currencyConverter)
            : base(symbol,
                quoteCurrency,
                symbolProperties,
@@ -94,7 +98,8 @@ namespace QuantConnect.Securities.Option
                Securities.VolatilityModel.Null,
                new OptionMarginModel(),
                new OptionDataFilter(),
-               new SecurityPriceVariationModel()
+               new SecurityPriceVariationModel(),
+               currencyConverter
                )
         {
             ExerciseSettlement = SettlementType.PhysicalDelivery;

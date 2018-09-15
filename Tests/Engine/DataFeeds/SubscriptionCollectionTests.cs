@@ -43,7 +43,7 @@ namespace QuantConnect.Tests.Engine.DataFeeds
             var start = DateTime.UtcNow;
             var end = start.AddSeconds(10);
             var config = new SubscriptionDataConfig(typeof(TradeBar), Symbols.SPY, Resolution.Minute, DateTimeZone.Utc, DateTimeZone.Utc, true, false, false);
-            var security = new Equity(Symbols.SPY, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"));
+            var security = new Equity(Symbols.SPY, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"), new CashBookCurrencyConverter(new CashBook()));
             var timeZoneOffsetProvider = new TimeZoneOffsetProvider(DateTimeZone.Utc, start, end);
             var enumerator = new EnqueueableEnumerator<BaseData>();
             var subscriptionDataEnumerator = SubscriptionData.Enumerator(config, security, timeZoneOffsetProvider, enumerator);
@@ -316,19 +316,19 @@ namespace QuantConnect.Tests.Engine.DataFeeds
             if (type == SecurityType.Equity)
             {
                 _symbol = new Symbol(SecurityIdentifier.GenerateEquity(DateTime.Now, symbol, Market.USA), symbol);
-                security = new Equity(_symbol, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"));
+                security = new Equity(_symbol, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"), new CashBookCurrencyConverter(new CashBook()));
             }
             else if (type == SecurityType.Option)
             {
                 _symbol = new Symbol(SecurityIdentifier.GenerateOption(DateTime.Now,
                     SecurityIdentifier.GenerateEquity(DateTime.Now, symbol, Market.USA),
                     Market.USA, 0.0m, OptionRight.Call, OptionStyle.American), symbol);
-                security = new Option(_symbol, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), new OptionSymbolProperties(SymbolProperties.GetDefault("USD")));
+                security = new Option(_symbol, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), new OptionSymbolProperties(SymbolProperties.GetDefault("USD")), new CashBookCurrencyConverter(new CashBook()));
             }
             else if (type == SecurityType.Future)
             {
                 _symbol = new Symbol(SecurityIdentifier.GenerateFuture(DateTime.Now, symbol, Market.USA), symbol);
-                security = new Future(_symbol, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"));
+                security = new Future(_symbol, SecurityExchangeHours.AlwaysOpen(DateTimeZone.Utc), new Cash("USD", 0, 1), SymbolProperties.GetDefault("USD"), new CashBookCurrencyConverter(new CashBook()));
             }
             else
             {

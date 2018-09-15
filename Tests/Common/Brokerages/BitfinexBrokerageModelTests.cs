@@ -31,7 +31,7 @@ namespace QuantConnect.Tests.Common.Brokerages
             {
                 return new Security(SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                     new SubscriptionDataConfig(typeof(TradeBar), Symbol, Resolution.Minute, TimeZones.NewYork, TimeZones.NewYork, false, false, false),
-                    new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                    new Cash(CashBook.AccountCurrency, 0, 1m), SymbolProperties.GetDefault(CashBook.AccountCurrency), new CashBookCurrencyConverter(new CashBook()));
             }
         }
 

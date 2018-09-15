@@ -49,7 +49,8 @@ namespace QuantConnect.Tests.Algorithm.Framework.Risk
                 Symbols.AAPL,
                 SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                 new Cash(CashBook.AccountCurrency, 0, 1),
-                SymbolProperties.GetDefault(CashBook.AccountCurrency));
+                SymbolProperties.GetDefault(CashBook.AccountCurrency),
+                new CashBookCurrencyConverter(new CashBook()));
             security.Setup(m => m.Invested).Returns(invested);
 
             var holding = new Mock<EquityHolding>(security.Object);

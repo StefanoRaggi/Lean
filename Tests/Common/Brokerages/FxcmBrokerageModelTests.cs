@@ -57,7 +57,8 @@ namespace QuantConnect.Tests.Common.Brokerages
                 SecurityExchangeHours.AlwaysOpen(TimeZones.NewYork),
                 new SubscriptionDataConfig(typeof(QuoteBar), symbol, Resolution.Minute, TimeZones.NewYork, TimeZones.NewYork, false, false, false),
                 new Cash(quoteCurrency, 0, 1m),
-                _symbolPropertiesDatabase.GetSymbolProperties(symbol.ID.Market, symbol, symbol.SecurityType, quoteCurrency));
+                _symbolPropertiesDatabase.GetSymbolProperties(symbol.ID.Market, symbol, symbol.SecurityType, quoteCurrency),
+                new CashBookCurrencyConverter(new CashBook()));
         }
 
         public TestCaseData[] GetOrderTestData()
