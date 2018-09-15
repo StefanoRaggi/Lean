@@ -183,6 +183,9 @@
     <Compile Include="ChartPoint.cs" />
     <Compile Include="Interfaces\IAlgorithmSubscriptionManager.cs" />
     <Compile Include="Interfaces\ICurrencyConverter.cs" />
+    <Compile Include="Orders\Fees\BaseFeeModel.cs" />
+    <Compile Include="Orders\Fees\FeeModelWrapper.cs" />
+    <Compile Include="Orders\Fees\IOrderFeeModel.cs" />
     <Compile Include="Python\BuyingPowerModelPythonWrapper.cs" />
     <Compile Include="Securities\CashAmount.cs" />
     <Compile Include="Securities\CashBookCurrencyConverter.cs" />
