@@ -13,6 +13,8 @@
  * limitations under the License.
 */
 
+using System;
+
 namespace QuantConnect.Securities
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace QuantConnect.Securities
         /// <summary>
         /// Returns a cash amount denominated in the account currency
         /// </summary>
-        public CashAmount ValueInAccountCurrency => _currencyConverter != null ? _currencyConverter.ConvertToAccountCurrency(this) : this;
+        public CashAmount ValueInAccountCurrency => _currencyConverter.ConvertToAccountCurrency(this);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CashAmount"/> class
@@ -43,8 +45,17 @@ namespace QuantConnect.Securities
         /// <param name="amount">The amount</param>
         /// <param name="currency">The currency</param>
         /// <param name="currencyConverter">The currency converter</param>
-        public CashAmount(decimal amount, string currency, ICurrencyConverter currencyConverter = null)
+        public CashAmount(decimal amount, string currency, ICurrencyConverter currencyConverter)
         {
+            if (string.IsNullOrWhiteSpace(currency))
+            {
+                throw new ArgumentException("Invalid currency", nameof(currency));
+            }
+            if (currencyConverter == null)
+            {
+                throw new ArgumentException("Invalid currency converter", nameof(currencyConverter));
+            }
+
             Amount = amount;
             Currency = currency;
             _currencyConverter = currencyConverter;

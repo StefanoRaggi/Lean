@@ -13,35 +13,41 @@
  * limitations under the License.
 */
 
+using System;
+
 namespace QuantConnect.Securities
 {
     /// <summary>
-    /// Provides the ability to convert cash amounts to the account currency
+    /// Provides a null currency converter which performs no conversion
     /// </summary>
-    public class CashBookCurrencyConverter : ICurrencyConverter
+    public class NullCurrencyConverter : ICurrencyConverter
     {
         private readonly CashBook _cashBook;
-        private readonly NullCurrencyConverter _nullCurrencyConverter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CashBookCurrencyConverter"/> class
+        /// Initializes a new instance of the <see cref="NullCurrencyConverter"/> class
         /// </summary>
         /// <param name="cashBook">The cash book instance</param>
-        public CashBookCurrencyConverter(CashBook cashBook)
+        public NullCurrencyConverter(CashBook cashBook)
         {
             _cashBook = cashBook;
-            _nullCurrencyConverter = new NullCurrencyConverter(cashBook);
         }
 
         /// <summary>
         /// Converts a cash amount to the account currency
         /// </summary>
         /// <param name="cashAmount">The <see cref="CashAmount"/> instance to convert</param>
-        /// <returns>A new <see cref="CashAmount"/> instance denominated in the account currency</returns>
+        /// <returns>The input <see cref="CashAmount"/> instance with no conversion</returns>
         public CashAmount ConvertToAccountCurrency(CashAmount cashAmount)
         {
-            var amount = _cashBook.Convert(cashAmount.Amount, cashAmount.Currency, CashBook.AccountCurrency);
-            return new CashAmount(amount, CashBook.AccountCurrency, _nullCurrencyConverter);
+            if (cashAmount.Currency != CashBook.AccountCurrency)
+            {
+                throw new Exception("NullCurrencyConverter.ConvertToAccountCurrency(): " +
+                                    $"the input currency was {cashAmount.Currency} " +
+                                    $"instead of the account currency ({CashBook.AccountCurrency}).");
+            }
+
+            return cashAmount;
         }
     }
 }
