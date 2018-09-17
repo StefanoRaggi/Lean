@@ -29,7 +29,6 @@ using QuantConnect.Python;
 using Python.Runtime;
 using QuantConnect.Data.Fundamental;
 using QuantConnect.Data.UniverseSelection;
-using QuantConnect.Interfaces;
 
 namespace QuantConnect.Securities
 {

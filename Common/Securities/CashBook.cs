@@ -22,7 +22,6 @@ using System.Text;
 using QuantConnect.Data;
 using System.Collections.Concurrent;
 using QuantConnect.Data.UniverseSelection;
-using QuantConnect.Interfaces;
 using QuantConnect.Logging;
 
 namespace QuantConnect.Securities

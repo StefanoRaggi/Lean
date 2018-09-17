@@ -20,7 +20,6 @@ using QuantConnect.Orders.Fills;
 using QuantConnect.Orders.Slippage;
 using QuantConnect.Orders.OptionExercise;
 using Python.Runtime;
-using QuantConnect.Interfaces;
 using QuantConnect.Util;
 
 namespace QuantConnect.Securities.Option

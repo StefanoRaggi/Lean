@@ -13,9 +13,7 @@
  * limitations under the License.
 */
 
-using QuantConnect.Securities;
-
-namespace QuantConnect.Interfaces
+namespace QuantConnect.Securities
 {
     /// <summary>
     /// Provides the ability to convert cash amounts to the account currency

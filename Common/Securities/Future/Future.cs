@@ -19,7 +19,6 @@ using QuantConnect.Orders.Fees;
 using QuantConnect.Orders.Fills;
 using QuantConnect.Orders.Slippage;
 using Python.Runtime;
-using QuantConnect.Interfaces;
 using QuantConnect.Util;
 
 namespace QuantConnect.Securities.Future

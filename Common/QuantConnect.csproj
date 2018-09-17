@@ -182,7 +182,7 @@
     <Compile Include="Chart.cs" />
     <Compile Include="ChartPoint.cs" />
     <Compile Include="Interfaces\IAlgorithmSubscriptionManager.cs" />
-    <Compile Include="Interfaces\ICurrencyConverter.cs" />
+    <Compile Include="Securities\ICurrencyConverter.cs" />
     <Compile Include="Orders\Fees\BaseFeeModel.cs" />
     <Compile Include="Orders\Fees\FeeModelWrapper.cs" />
     <Compile Include="Orders\Fees\IOrderFeeModel.cs" />
