@@ -114,6 +114,32 @@ namespace QuantConnect.Algorithm.CSharp
             }
         }
 
+        // Old version of fee model
+        // with two changes required:
+        // - inheritance from BaseFeeModel instead of IFeeModel
+        // - override keyword on GetOrderFee method
+
+        //public class CustomFeeModel : BaseFeeModel
+        //{
+        //    private readonly QCAlgorithm _algorithm;
+
+        //    public CustomFeeModel(QCAlgorithm algorithm)
+        //    {
+        //        _algorithm = algorithm;
+        //    }
+
+        //    public override decimal GetOrderFee(Security security, Order order)
+        //    {
+        //        // custom fee math
+        //        var fee = Math.Max(1m, security.Price * order.AbsoluteQuantity * 0.00001m);
+
+        //        _algorithm.Log("CustomFeeModel: " + fee);
+        //        return fee;
+        //    }
+        //}
+
+        // New version of fee model
+
         public class CustomFeeModel : BaseFeeModel
         {
             private readonly QCAlgorithm _algorithm;
@@ -129,7 +155,7 @@ namespace QuantConnect.Algorithm.CSharp
                 var fee = Math.Max(1m, context.Security.Price * context.Order.AbsoluteQuantity * 0.00001m);
 
                 _algorithm.Log("CustomFeeModel: " + fee);
-                return new OrderFee(new CashAmount(fee, CashBook.AccountCurrency, context.Security.CurrencyConverter));
+                return new OrderFee(new CashAmount(fee, CashBook.AccountCurrency, context.CurrencyConverter));
             }
         }
 

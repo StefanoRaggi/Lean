@@ -18,7 +18,7 @@ namespace QuantConnect.Orders.Fees
     /// <summary>
     /// Represents a model that simulates order fees
     /// </summary>
-    public interface IOrderFeeModel : IFeeModel
+    public interface IOrderFeeModel
     {
         /// <summary>
         /// Gets the order fee associated with the specified order. This returns the cost

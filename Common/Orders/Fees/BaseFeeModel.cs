@@ -20,7 +20,7 @@ namespace QuantConnect.Orders.Fees
     /// <summary>
     /// Provides an abstract base class for fee models.
     /// </summary>
-    public abstract class BaseFeeModel : IOrderFeeModel
+    public abstract class BaseFeeModel : IOrderFeeModel, IFeeModel
     {
         /// <summary>
         /// Gets the order fee associated with the specified order. This returns the cost
@@ -29,7 +29,7 @@ namespace QuantConnect.Orders.Fees
         /// <param name="security">The security matching the order</param>
         /// <param name="order">The order to compute fees for</param>
         /// <returns>The cost of the order in units of the account currency</returns>
-        decimal IFeeModel.GetOrderFee(Security security, Order order)
+        public virtual decimal GetOrderFee(Security security, Order order)
         {
             return GetOrderFee(new OrderFeeContext(security, order, security.CurrencyConverter)).Fee.Amount;
         }
@@ -40,6 +40,9 @@ namespace QuantConnect.Orders.Fees
         /// </summary>
         /// <param name="context">The order fee context instance</param>
         /// <returns>A new <see cref="OrderFee"/> instance</returns>
-        public abstract OrderFee GetOrderFee(OrderFeeContext context);
+        public virtual OrderFee GetOrderFee(OrderFeeContext context)
+        {
+            return new OrderFee(new CashAmount(0m, CashBook.AccountCurrency, context.CurrencyConverter));
+        }
     }
 }
