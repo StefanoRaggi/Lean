@@ -13,6 +13,7 @@
  * limitations under the License.
 */
 
+using System;
 using QuantConnect.Securities;
 
 namespace QuantConnect.Orders.Fees
@@ -22,13 +23,13 @@ namespace QuantConnect.Orders.Fees
     /// </summary>
     public class FeeModelWrapper : BaseFeeModel
     {
-        private readonly IFeeModel _feeModel;
+        private readonly object _feeModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeeModelWrapper"/> class
         /// </summary>
         /// <param name="feeModel">The fee model</param>
-        public FeeModelWrapper(IFeeModel feeModel)
+        public FeeModelWrapper(object feeModel)
         {
             _feeModel = feeModel;
         }
@@ -37,15 +38,24 @@ namespace QuantConnect.Orders.Fees
         /// Gets the order fee associated with the specified order. This returns the cost
         /// of the transaction, including the currency
         /// </summary>
-        /// <param name="security">The security matching the order</param>
-        /// <param name="order">The order to compute fees for</param>
         /// <returns>The cost of the order, including the currency</returns>
-        public override CashAmount GetOrderFee(Security security, Order order)
+        public override OrderFee GetOrderFee(OrderFeeContext context)
         {
-            var model = _feeModel as IOrderFeeModel;
-            return model != null
-                ? model.GetOrderFee(security, order)
-                : new CashAmount(_feeModel.GetOrderFee(security, order), CashBook.AccountCurrency, security.CurrencyConverter);
+            var feeModel = _feeModel as IFeeModel;
+            if (feeModel != null)
+            {
+                var fee = feeModel.GetOrderFee(context.Security, context.Order);
+                var cashAmount = new CashAmount(fee, CashBook.AccountCurrency, context.CurrencyConverter);
+                return new OrderFee(cashAmount);
+            }
+
+            var orderFeeModel = _feeModel as IOrderFeeModel;
+            if (orderFeeModel != null)
+            {
+                return orderFeeModel.GetOrderFee(context);
+            }
+
+            throw new Exception($"Unsupported fee model type: {_feeModel.GetType().Name}");
         }
     }
 }

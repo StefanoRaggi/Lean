@@ -31,18 +31,15 @@ namespace QuantConnect.Orders.Fees
         /// <returns>The cost of the order in units of the account currency</returns>
         decimal IFeeModel.GetOrderFee(Security security, Order order)
         {
-            var model = this as IOrderFeeModel;
-            var fee = model.GetOrderFee(security, order);
-            return security.CurrencyConverter.ConvertToAccountCurrency(fee).Amount;
+            return GetOrderFee(new OrderFeeContext(security, order, security.CurrencyConverter)).Fee.Amount;
         }
 
         /// <summary>
         /// Gets the order fee associated with the specified order. This returns the cost
         /// of the transaction, including the currency
         /// </summary>
-        /// <param name="security">The security matching the order</param>
-        /// <param name="order">The order to compute fees for</param>
-        /// <returns>The cost of the order, including the currency</returns>
-        public abstract CashAmount GetOrderFee(Security security, Order order);
+        /// <param name="context">The order fee context instance</param>
+        /// <returns>A new <see cref="OrderFee"/> instance</returns>
+        public abstract OrderFee GetOrderFee(OrderFeeContext context);
     }
 }

@@ -15,6 +15,7 @@
 */
 
 using System.Linq;
+using QuantConnect.Orders;
 using QuantConnect.Orders.Fees;
 using QuantConnect.Securities;
 
@@ -39,7 +40,21 @@ namespace QuantConnect.Util
         /// </summary>
         public static FeeModelWrapper GetFeeModel(this Security security)
         {
-            return security.FeeModel as FeeModelWrapper ?? new FeeModelWrapper(security.FeeModel);
+            return new FeeModelWrapper(security.FeeModel);
+        }
+
+        /// <summary>
+        /// Returns the order fee for a given order
+        /// </summary>
+        /// <param name="security">The security matching the order</param>
+        /// <param name="order">The order to compute fees for</param>
+        /// <returns></returns>
+        public static CashAmount GetOrderFee(this Security security, Order order)
+        {
+            return security
+                .GetFeeModel()
+                .GetOrderFee(new OrderFeeContext(security, order, security.CurrencyConverter))
+                .Fee;
         }
     }
 }

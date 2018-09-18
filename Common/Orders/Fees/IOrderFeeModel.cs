@@ -13,8 +13,6 @@
  * limitations under the License.
 */
 
-using QuantConnect.Securities;
-
 namespace QuantConnect.Orders.Fees
 {
     /// <summary>
@@ -26,9 +24,8 @@ namespace QuantConnect.Orders.Fees
         /// Gets the order fee associated with the specified order. This returns the cost
         /// of the transaction, including the currency
         /// </summary>
-        /// <param name="security">The security matching the order</param>
-        /// <param name="order">The order to compute fees for</param>
-        /// <returns>The cost of the order, including the currency</returns>
-        new CashAmount GetOrderFee(Security security, Order order);
+        /// <param name="context">The order fee context instance</param>
+        /// <returns>A new <see cref="OrderFee"/> instance</returns>
+        OrderFee GetOrderFee(OrderFeeContext context);
     }
 }
