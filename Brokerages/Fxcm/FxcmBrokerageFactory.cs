@@ -29,9 +29,6 @@ namespace QuantConnect.Brokerages.Fxcm
     /// </summary>
     public class FxcmBrokerageFactory : BrokerageFactory
     {
-        private const string DefaultServer = "http://www.fxcorporate.com/Hosts.jsp";
-        private const string DefaultTerminal = "Demo";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FxcmBrokerageFactory"/> class
         /// </summary>
@@ -47,20 +44,13 @@ namespace QuantConnect.Brokerages.Fxcm
         /// The implementation of this property will create the brokerage data dictionary required for
         /// running live jobs. See <see cref="IJobQueueHandler.NextJob"/>
         /// </remarks>
-        public override Dictionary<string, string> BrokerageData
-        {
-            get
+        public override Dictionary<string, string> BrokerageData =>
+            new Dictionary<string, string>
             {
-                return new Dictionary<string, string>
-                {
-                    { "fxcm-server", Config.Get("fxcm-server", DefaultServer) },
-                    { "fxcm-terminal", Config.Get("fxcm-terminal", DefaultTerminal) },
-                    { "fxcm-user-name", Config.Get("fxcm-user-name") },
-                    { "fxcm-password", Config.Get("fxcm-password") },
-                    { "fxcm-account-id", Config.Get("fxcm-account-id") }
-                };
-            }
-        }
+                { "fxcm-access-token", Config.Get("fxcm-access-token") },
+                { "fxcm-demo", Config.Get("fxcm-demo", "true") },
+                { "fxcm-account-id", Config.Get("fxcm-account-id") },
+            };
 
         /// <summary>
         /// Gets a new instance of the <see cref="FxcmBrokerageModel"/>
@@ -79,10 +69,8 @@ namespace QuantConnect.Brokerages.Fxcm
             var errors = new List<string>();
 
             // read values from the brokerage data
-            var server = Read<string>(job.BrokerageData, "fxcm-server", errors);
-            var terminal = Read<string>(job.BrokerageData, "fxcm-terminal", errors);
-            var userName = Read<string>(job.BrokerageData, "fxcm-user-name", errors);
-            var password = Read<string>(job.BrokerageData, "fxcm-password", errors);
+            var accessToken = Read<string>(job.BrokerageData, "fxcm-access-token", errors);
+            var isDemo = Read<bool>(job.BrokerageData, "fxcm-demo", errors);
             var accountId = Read<string>(job.BrokerageData, "fxcm-account-id", errors);
 
             if (errors.Count != 0)
@@ -92,13 +80,11 @@ namespace QuantConnect.Brokerages.Fxcm
             }
 
             var brokerage = new FxcmBrokerage(
-                algorithm.Transactions, 
+                algorithm.Transactions,
                 algorithm.Portfolio,
                 Composer.Instance.GetExportedValueByTypeName<IDataAggregator>(Config.Get("data-aggregator", "QuantConnect.Lean.Engine.DataFeeds.AggregationManager")),
-                server, 
-                terminal, 
-                userName, 
-                password, 
+                accessToken,
+                isDemo,
                 accountId);
             Composer.Instance.AddPart<IDataQueueHandler>(brokerage);
 

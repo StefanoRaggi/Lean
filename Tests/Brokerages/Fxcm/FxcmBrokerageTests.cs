@@ -27,7 +27,7 @@ using QuantConnect.Securities;
 
 namespace QuantConnect.Tests.Brokerages.Fxcm
 {
-    [TestFixture, Ignore("These tests require a configured and active FXCM practice account")]
+    [TestFixture, Explicit("These tests require a configured and active FXCM practice account")]
     public partial class FxcmBrokerageTests : BrokerageTests
     {
         /// <summary>
@@ -36,13 +36,11 @@ namespace QuantConnect.Tests.Brokerages.Fxcm
         /// <returns>A connected brokerage instance</returns>
         protected override IBrokerage CreateBrokerage(IOrderProvider orderProvider, ISecurityProvider securityProvider)
         {
-            var server = Config.Get("fxcm-server");
-            var terminal = Config.Get("fxcm-terminal");
-            var userName = Config.Get("fxcm-user-name");
-            var password = Config.Get("fxcm-password");
+            var accessToken = Config.Get("fxcm-access-token");
+            var isDemo = Config.GetBool("fxcm-demo");
             var accountId = Config.Get("fxcm-account-id");
 
-            return new FxcmBrokerage(orderProvider, securityProvider, new AggregationManager(), server, terminal, userName, password, accountId);
+            return new FxcmBrokerage(orderProvider, securityProvider, new AggregationManager(), accessToken, isDemo, accountId);
         }
 
         /// <summary>

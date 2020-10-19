@@ -629,11 +629,8 @@ namespace QuantConnect.Tests.Brokerages
                 {
                     while (enumerator.MoveNext() && !cancellationToken.IsCancellationRequested)
                     {
-                        BaseData tick = enumerator.Current;
-                        if (callback != null)
-                        {
-                            callback.Invoke(tick);
-                        }
+                        var tick = enumerator.Current;
+                        callback?.Invoke(tick);
                     }
                 }
                 catch (AssertionException)
@@ -646,6 +643,5 @@ namespace QuantConnect.Tests.Brokerages
                 }
             }, cancellationToken.Token);
         }
-
     }
 }
